@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title or "Three-Step Auth System" }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <style>
+    body {
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Navbar Styling */
+    .navbar {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      background: linear-gradient(90deg, #343a40, #495057);
+      padding-top: 12px;
+      padding-bottom: 12px;
+      transition: background 0.3s;
+    }
+
+    .navbar a.navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .navbar .btn-outline-light {
+      transition: all 0.3s ease;
+    }
+
+    .navbar .btn-outline-light:hover {
+      background-color: white;
+      color: #343a40;
+    }
+
+    /* Flash messages */
+    .alert {
+      animation: fadeInSlide 0.6s ease;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Footer */
+    footer {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+
+    /* Responsive padding */
+    .container {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-dark px-3">
+    <a class="navbar-brand text-white" href="#">🔒 Visual Auth</a>
+    {% if session.username %}
+      <div class="d-flex align-items-center">
+        <span class="text-white me-3">Hello, {{ session.username }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-light">Logout</a>
+      </div>
+    {% endif %}
+  </nav>
+
+  <div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

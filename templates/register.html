@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Visual Authentication</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .glass-bg {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    }
+
+    .form-floating > .form-control {
+      background-color: rgba(255, 255, 255, 0.7);
+      border: 1px solid #ced4da;
+      transition: all 0.3s ease;
+    }
+
+    .form-floating > .form-control:focus {
+      border-color: #198754;
+      box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+    }
+
+    .image-select {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 2px solid transparent;
+      border-radius: 0.5rem;
+    }
+
+    .image-select:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(13, 110, 253, 0.4);
+    }
+
+    .image-checkbox:checked + .image-select {
+      border: 3px solid #0d6efd;
+      box-shadow: 0 0 10px #0d6efd;
+    }
+
+    .btn-success {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+    }
+
+    .btn-success:hover {
+      background-color: #198754;
+      box-shadow: 0 4px 10px rgba(25, 135, 84, 0.4);
+    }
+
+    h3 {
+      font-size: 1.8rem;
+    }
+
+    label.from {
+      font-size: 1rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-text {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row justify-content-center w-100">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg rounded-4 px-4 py-5 glass-bg border-0">
+        <h3 class="text-center mb-4 text-success fw-bold">📝 Create Your Account</h3>
+        <form method="POST" action="/register" onsubmit="return validateImages();">
+
+          <div class="form-floating mb-3">
+            <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
+            <label for="username">Username</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+            <label for="password">Password</label>
+          </div>
+          <div id="strength-text" class="form-text text-muted mb-3"></div>
+
+          <label class="from label">Select exactly 3 images:</label>
+          <div class="row">
+            {% for i in range(1, 10) %}
+            <div class="col-4 text-center mb-3">
+              <input type="checkbox" name="selected_images" value="{{ 'img' ~ i ~ '.jpg' }}" class="image-checkbox d-none" id="{{ 'img' ~ i }}">
+              <label for="{{ 'img' ~ i }}" >
+                <img src="{{ url_for('static', filename='images/img' ~ i ~ '.jpg') }}" alt="Image {{ i }}" class="image-select">
+              </label>
+            </div>
+            {% endfor %}
+            
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 py-2">Register</button>
+
+          <div class="text-center mt-3">
+            <small class="text-muted">Already have an account? <a href="{{ url_for('login') }}">Login here</a></small>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Password strength meter logic
+  const password = document.getElementById("password");
+  const strengthText = document.getElementById("strength-text");
+
+  password.addEventListener("input", () => {
+    const val = password.value;
+    if (val.length < 6) {
+      strengthText.textContent = "Password is too short.";
+      strengthText.style.color = "red";
+    } else if (/[A-Z]/.test(val) && /\d/.test(val)) {
+      strengthText.textContent = "Strong password.";
+      strengthText.style.color = "green";
+    } else {
+      strengthText.textContent = "Medium strength.";
+      strengthText.style.color = "orange";
+    }
+  });
+
+  // Image selection validation and styling
+  const checkboxes = document.querySelectorAll('.image-checkbox');
+  const maxSelections = 3;
+
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      const checkedCount = document.querySelectorAll('.image-checkbox:checked').length;
+      if (checkedCount > maxSelections) {
+        checkbox.checked = false; // Uncheck the last selected box
+        alert("You can only select up to 3 images.");
+      }
+    });
+  });
+
+  function validateImages() {
+    const checked = document.querySelectorAll('.image-checkbox:checked');
+    if (checked.length !== maxSelections) {
+      alert(`Please select exactly ${maxSelections} images.`);
+      return false;
+    }
+    return true;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card glass-bg shadow-lg p-4 border-0 rounded-4">
+      <h3 class="text-center text-primary fw-bold mb-3">🤖 CAPTCHA Verification</h3>
+      <form method="POST" action="/captcha-auth">
+        <p class="text-center mb-4">
+          To confirm you're human, please solve:
+        </p>
+        <h4 class="text-center mb-4">
+          <span class="badge bg-info text-dark fs-4">{{ a }} + {{ b }} = ?</span>
+        </h4>
+
+        <div class="form-floating mb-3">
+          <input type="number" name="captcha" id="captcha" class="form-control shadow-sm" placeholder="Your Answer" required>
+          <label for="captcha">Enter your answer</label>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-success px-4 py-2">Verify & Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.glass-bg {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+</style>
+{% endblock %}
