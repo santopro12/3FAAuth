@@ -219,7 +219,8 @@ def qr_auth():
         # We need to make this URL publicly accessible
         # Example: 'http://<your-public-ip-or-domain>/verify-qr?token=<the-token>'
         # For local testing, you can use a local IP or a service like ngrok
-        base_url = 'http://192.168.43.113' # Change this for deployment
+        # base_url = 'http://192.168.43.113' # Change this for deployment
+        base_url = 'https://visualauth.onrender.com' # Change this for deployment
         qr_data = f"{base_url}/verify-qr?token={session['qr_token']}"
         
         qr.add_data(qr_data)
