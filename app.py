@@ -220,7 +220,8 @@ def qr_auth():
         # Example: 'http://<your-public-ip-or-domain>/verify-qr?token=<the-token>'
         # For local testing, you can use a local IP or a service like ngrok
         # base_url = 'http://192.168.43.113' # Change this for deployment
-        base_url = 'https://visualauth.onrender.com' # Change this for deployment
+        # base_url = 'https://visualauth.onrender.com' # Change this for deployment
+        base_url = request.host_url.rstrip('/')
         qr_data = f"{base_url}/verify-qr?token={session['qr_token']}"
         
         qr.add_data(qr_data)
@@ -245,6 +246,7 @@ def verify_qr():
     if token_from_phone and token_from_phone == session.get('qr_token'):
         # Token is correct! Authenticate the user.
         session['authenticated'] = True
+        
         
         # 💡 Optional: Clear the QR token from the session to prevent re-use
         session.pop('qr_token', None)
